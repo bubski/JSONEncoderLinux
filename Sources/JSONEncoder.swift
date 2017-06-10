@@ -14,6 +14,8 @@
 // JSON Encoder
 //===----------------------------------------------------------------------===//
 
+import Foundation
+
 /// `JSONEncoder` facilitates the encoding of `Encodable` values into JSON.
 open class JSONEncoder {
     // MARK: Options
@@ -309,42 +311,42 @@ fileprivate struct _JSONKeyedEncodingContainer<K : CodingKey> : KeyedEncodingCon
 
     // MARK: - KeyedEncodingContainerProtocol Methods
 
-    mutating func encode(_ value: Bool, forKey key: Key)   throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: Int, forKey key: Key)    throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: Int8, forKey key: Key)   throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: Int16, forKey key: Key)  throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: Int32, forKey key: Key)  throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: Int64, forKey key: Key)  throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: UInt, forKey key: Key)   throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: UInt8, forKey key: Key)  throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: UInt16, forKey key: Key) throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: UInt32, forKey key: Key) throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: UInt64, forKey key: Key) throws { self.container[key.stringValue] = self.encoder.box(value) }
-    mutating func encode(_ value: String, forKey key: Key) throws { self.container[key.stringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Bool, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int8, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int16, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int32, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int64, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt8, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt16, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt32, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt64, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: String, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
 
     mutating func encode(_ value: Float, forKey key: Key)  throws {
         // Since the float may be invalid and throw, the coding path needs to contain this key.
         try self.encoder.with(pushedKey: key) {
-            self.container[key.stringValue] = try self.encoder.box(value)
+            self.container[key.nsstringValue] = try self.encoder.box(value)
         }
     }
 
     mutating func encode(_ value: Double, forKey key: Key) throws {
         // Since the double may be invalid and throw, the coding path needs to contain this key.
         try self.encoder.with(pushedKey: key) {
-            self.container[key.stringValue] = try self.encoder.box(value)
+            self.container[key.nsstringValue] = try self.encoder.box(value)
         }
     }
 
     mutating func encode<T : Encodable>(_ value: T, forKey key: Key) throws {
         try self.encoder.with(pushedKey: key) {
-            self.container[key.stringValue] = try self.encoder.box(value)
+            self.container[key.nsstringValue] = try self.encoder.box(value)
         }
     }
 
     mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
         let dictionary = NSMutableDictionary()
-        self.container[key.stringValue] = dictionary
+        self.container[key.nsstringValue] = dictionary
 
         return self.with(pushedKey: key) {
             let container = _JSONKeyedEncodingContainer<NestedKey>(referencing: self.encoder, codingPath: self.codingPath, wrapping: dictionary)
@@ -354,7 +356,7 @@ fileprivate struct _JSONKeyedEncodingContainer<K : CodingKey> : KeyedEncodingCon
 
     mutating func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
         let array = NSMutableArray()
-        self.container[key.stringValue] = array
+        self.container[key.nsstringValue] = array
 
         return self.with(pushedKey: key) {
             return _JSONUnkeyedEncodingContainer(referencing: self.encoder, codingPath: self.codingPath, wrapping: array)
@@ -590,7 +592,7 @@ extension _JSONEncoder {
             guard case let .convertToString(positiveInfinity: posInfString,
                                             negativeInfinity: negInfString,
                                             nan: nanString) = self.options.nonConformingFloatEncodingStrategy else {
-                throw EncodingError._invalidFloatingPointValue(float, at: codingPath)
+                                                throw EncodingError._invalidFloatingPointValue(float, at: codingPath)
             }
 
             if float == Float.infinity {
@@ -610,7 +612,7 @@ extension _JSONEncoder {
             guard case let .convertToString(positiveInfinity: posInfString,
                                             negativeInfinity: negInfString,
                                             nan: nanString) = self.options.nonConformingFloatEncodingStrategy else {
-                throw EncodingError._invalidFloatingPointValue(double, at: codingPath)
+                                                throw EncodingError._invalidFloatingPointValue(double, at: codingPath)
             }
 
             if double == Double.infinity {
@@ -1620,18 +1622,20 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        if let number = value as? NSNumber {
+        if let number: NSNumber = platformConsistentCast(value) {
             // TODO: Add a flag to coerce non-boolean numbers into Bools?
-            if number === kCFBooleanTrue as NSNumber {
-                return true
-            } else if number === kCFBooleanFalse as NSNumber {
-                return false
-            }
 
-        /* FIXME: If swift-corelibs-foundation doesn't change to use NSNumber, this code path will need to be included and tested:
-        } else if let bool = value as? Bool {
-            return bool
-        */
+            return number.boolValue
+//            if number === kCFBooleanTrue as NSNumber {
+//                return true
+//            } else if number === kCFBooleanFalse as NSNumber {
+//                return false
+//            }
+
+            /* FIXME: If swift-corelibs-foundation doesn't change to use NSNumber, this code path will need to be included and tested:
+             } else if let bool = value as? Bool {
+             return bool
+             */
 
         }
 
@@ -1642,7 +1646,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1658,7 +1662,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1674,7 +1678,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1690,7 +1694,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1706,7 +1710,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1722,7 +1726,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1738,7 +1742,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1754,7 +1758,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1770,7 +1774,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1786,7 +1790,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        guard let number = value as? NSNumber else {
+        guard let number: NSNumber = platformConsistentCast(value) else {
             throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
         }
 
@@ -1802,7 +1806,7 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        if let number = value as? NSNumber {
+        if let number: NSNumber = platformConsistentCast(value) {
             // We are willing to return a Float by losing precision:
             // * If the original value was integral,
             //   * and the integral value was > Float.greatestFiniteMagnitude, we will fail
@@ -1816,20 +1820,20 @@ extension _JSONDecoder {
 
             return Float(double)
 
-        /* FIXME: If swift-corelibs-foundation doesn't change to use NSNumber, this code path will need to be included and tested:
-        } else if let double = value as? Double {
-            if abs(double) <= Double(Float.max) {
-                return Float(double)
-            }
+            /* FIXME: If swift-corelibs-foundation doesn't change to use NSNumber, this code path will need to be included and tested:
+             } else if let double = value as? Double {
+             if abs(double) <= Double(Float.max) {
+             return Float(double)
+             }
 
-            overflow = true
-        } else if let int = value as? Int {
-            if let float = Float(exactly: int) {
-                return float
-            }
+             overflow = true
+             } else if let int = value as? Int {
+             if let float = Float(exactly: int) {
+             return float
+             }
 
-            overflow = true
-        */
+             overflow = true
+             */
 
         } else if let string = value as? String,
             case .convertFromString(let posInfString, let negInfString, let nanString) = self.options.nonConformingFloatDecodingStrategy {
@@ -1849,23 +1853,23 @@ extension _JSONDecoder {
         guard let value = value else { return nil }
         guard !(value is NSNull) else { return nil }
 
-        if let number = value as? NSNumber {
+        if let number: NSNumber = platformConsistentCast(value) {
             // We are always willing to return the number as a Double:
             // * If the original value was integral, it is guaranteed to fit in a Double; we are willing to lose precision past 2^53 if you encoded a UInt64 but requested a Double
             // * If it was a Float or Double, you will get back the precise value
             // * If it was Decimal, you will get back the nearest approximation
             return number.doubleValue
 
-        /* FIXME: If swift-corelibs-foundation doesn't change to use NSNumber, this code path will need to be included and tested:
-        } else if let double = value as? Double {
-            return double
-        } else if let int = value as? Int {
-            if let double = Double(exactly: int) {
-                return double
-            }
+            /* FIXME: If swift-corelibs-foundation doesn't change to use NSNumber, this code path will need to be included and tested:
+             } else if let double = value as? Double {
+             return double
+             } else if let int = value as? Int {
+             if let double = Double(exactly: int) {
+             return double
+             }
 
-            overflow = true
-        */
+             overflow = true
+             */
 
         } else if let string = value as? String,
             case .convertFromString(let posInfString, let negInfString, let nanString) = self.options.nonConformingFloatDecodingStrategy {
@@ -2038,3 +2042,4 @@ fileprivate extension EncodingError {
         return .invalidValue(value, EncodingError.Context(codingPath: codingPath, debugDescription: debugDescription))
     }
 }
+
