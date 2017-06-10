@@ -311,82 +311,42 @@ fileprivate struct _JSONKeyedEncodingContainer<K : CodingKey> : KeyedEncodingCon
 
     // MARK: - KeyedEncodingContainerProtocol Methods
 
-    mutating func encode(_ value: Bool, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: Int, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: Int8, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: Int16, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: Int32, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: Int64, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: UInt, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: UInt8, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: UInt16, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: UInt32, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: UInt64, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
-    mutating func encode(_ value: String, forKey key: Key) throws {
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = self.encoder.box(value)
-    }
+    mutating func encode(_ value: Bool, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int8, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int16, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int32, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: Int64, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt8, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt16, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt32, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: UInt64, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
+    mutating func encode(_ value: String, forKey key: Key) throws { self.container[key.nsstringValue] = self.encoder.box(value) }
 
     mutating func encode(_ value: Float, forKey key: Key)  throws {
         // Since the float may be invalid and throw, the coding path needs to contain this key.
         try self.encoder.with(pushedKey: key) {
-            let stringKey = NSString(string: key.stringValue)
-            self.container[stringKey] = try self.encoder.box(value)
+            self.container[key.nsstringValue] = try self.encoder.box(value)
         }
     }
 
     mutating func encode(_ value: Double, forKey key: Key) throws {
         // Since the double may be invalid and throw, the coding path needs to contain this key.
         try self.encoder.with(pushedKey: key) {
-            let stringKey = NSString(string: key.stringValue)
-            self.container[stringKey] = try self.encoder.box(value)
+            self.container[key.nsstringValue] = try self.encoder.box(value)
         }
     }
 
     mutating func encode<T : Encodable>(_ value: T, forKey key: Key) throws {
         try self.encoder.with(pushedKey: key) {
-            let stringKey = NSString(string: key.stringValue)
-            self.container[stringKey] = try self.encoder.box(value)
+            self.container[key.nsstringValue] = try self.encoder.box(value)
         }
     }
 
     mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
         let dictionary = NSMutableDictionary()
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = dictionary
+        self.container[key.nsstringValue] = dictionary
 
         return self.with(pushedKey: key) {
             let container = _JSONKeyedEncodingContainer<NestedKey>(referencing: self.encoder, codingPath: self.codingPath, wrapping: dictionary)
@@ -396,8 +356,7 @@ fileprivate struct _JSONKeyedEncodingContainer<K : CodingKey> : KeyedEncodingCon
 
     mutating func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
         let array = NSMutableArray()
-        let stringKey = NSString(string: key.stringValue)
-        self.container[stringKey] = array
+        self.container[key.nsstringValue] = array
 
         return self.with(pushedKey: key) {
             return _JSONUnkeyedEncodingContainer(referencing: self.encoder, codingPath: self.codingPath, wrapping: array)
