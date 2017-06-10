@@ -16,6 +16,8 @@
 
 // Adding the following extensions to EncodingError and DecodingError allows them to bridge to NSErrors implicitly.
 
+import Foundation
+
 fileprivate let NSCodingPathErrorKey = "NSCodingPath"
 fileprivate let NSDebugDescriptionErrorKey = "NSDebugDescription"
 
@@ -46,15 +48,15 @@ extension DecodingError : CustomNSError {
         switch self {
         case .valueNotFound(_, _): fallthrough
         case .keyNotFound(_, _):
-            return CocoaError._coderValueNotFound.rawValue
+            return CocoaError.coderValueNotFound.rawValue
 
         case .typeMismatch(_, _): fallthrough
         case .dataCorrupted(_):
-            return CocoaError._coderReadCorrupt.rawValue
+            return CocoaError.coderReadCorrupt.rawValue
         }
     }
 
-    public var errorUserInfo: [String : Any]? {
+    public var errorUserInfo: [String : Any] {
         let context: Context
         switch self {
         case .typeMismatch(_, let c): context = c
@@ -106,3 +108,4 @@ internal extension DecodingError {
         }
     }
 }
+

@@ -7,6 +7,7 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
+import Foundation
 import CoreFoundation
 
 extension ISO8601DateFormatter {
@@ -77,8 +78,8 @@ open class ISO8601DateFormatter : Formatter, NSSecureCoding {
         super.init()
     }
     
-    public required init?(coder aDecoder: NSCoder) { NSUnimplemented() }
-    open override func encode(with aCoder: NSCoder) { NSUnimplemented() }
+    public required init?(coder aDecoder: NSCoder) { abort() }
+    open override func encode(with aCoder: NSCoder) { abort() }
     public static var supportsSecureCoding: Bool { return true }
     
     open func string(from date: Date) -> String {
@@ -117,3 +118,4 @@ open class ISO8601DateFormatter : Formatter, NSSecureCoding {
     }
     
 }
+
