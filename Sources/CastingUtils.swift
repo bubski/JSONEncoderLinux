@@ -100,6 +100,14 @@ func platformConsistentCast<T>(_ object: Any) -> T? {
 			default: break
 			}
 		}
+
+        if T.self is NSString.Type {
+            if let casted = object as? String { return casted._nsObject as? T }
+        }
+
+        if T.self is String.Type {
+            if let casted = object as? NSString { return casted._swiftObject as? T }
+        }
 	#endif
 
 	return nil
@@ -167,4 +175,10 @@ private func platformConsistentCastToNSNumber(_ object: Any) -> NSNumber? {
 	}
 	
 	return nil
+}
+
+extension CodingKey {
+    var nsstringValue: NSString {
+        return NSString(string: self.stringValue)
+    }
 }
