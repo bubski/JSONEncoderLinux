@@ -10,6 +10,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+#if os(Linux)
+
 import Foundation
 import CoreFoundation
 
@@ -102,3 +104,5 @@ extension NSDate {
         return unsafeBitCast(self, to: CFType.self)
     }
 }
+
+#endif

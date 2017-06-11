@@ -16,6 +16,8 @@
 
 // Adding the following extensions to EncodingError and DecodingError allows them to bridge to NSErrors implicitly.
 
+#if os(Linux)
+
 import Foundation
 
 fileprivate let NSCodingPathErrorKey = "NSCodingPath"
@@ -109,3 +111,4 @@ internal extension DecodingError {
     }
 }
 
+#endif

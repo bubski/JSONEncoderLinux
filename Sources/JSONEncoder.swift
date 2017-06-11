@@ -14,6 +14,8 @@
 // JSON Encoder
 //===----------------------------------------------------------------------===//
 
+#if os(Linux)
+
 import Foundation
 
 /// `JSONEncoder` facilitates the encoding of `Encodable` values into JSON.
@@ -2043,3 +2045,4 @@ fileprivate extension EncodingError {
     }
 }
 
+#endif

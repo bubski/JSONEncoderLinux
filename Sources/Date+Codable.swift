@@ -10,6 +10,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+#if os(Linux)
+
 import Foundation
 
 extension Date : Codable {
@@ -25,3 +27,4 @@ extension Date : Codable {
     }
 }
 
+#endif
