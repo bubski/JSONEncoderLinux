@@ -7,6 +7,8 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
+#if os(Linux)
+
 import Foundation
 import CoreFoundation
 
@@ -119,3 +121,4 @@ open class ISO8601DateFormatter : Formatter, NSSecureCoding {
     
 }
 
+#endif
