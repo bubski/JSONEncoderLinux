@@ -2045,4 +2045,9 @@ fileprivate extension EncodingError {
     }
 }
 
+#else
+
+import Foundation
+public typealias JSONEncoder = Foundation.JSONEncoder
+
 #endif
