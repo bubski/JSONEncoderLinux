@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#if os(Linux)
+
 import Foundation
 
 /**
@@ -204,3 +206,5 @@ extension CodingKey {
         return NSString(string: self.stringValue)
     }
 }
+
+#endif
