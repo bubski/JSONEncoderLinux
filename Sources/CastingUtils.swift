@@ -102,110 +102,109 @@
         #if os(Linux)
 
             if T.self is NSNumber.Type {
-			return platformConsistentCastToNSNumber(object) as? T
-		}
+                return platformConsistentCastToNSNumber(object) as? T
+            }
 
-		if let nsnumber = object as? NSNumber {
-			switch T.self {
-			case is Int8.Type: return nsnumber.int8Value as? T
-			case is UInt8.Type: return nsnumber.uint8Value as? T
-			case is Int16.Type: return nsnumber.int16Value as? T
-			case is UInt16.Type: return nsnumber.uint16Value as? T
-			case is Int32.Type: return nsnumber.int32Value as? T
-			case is UInt32.Type: return nsnumber.uint32Value as? T
-			case is Int64.Type: return nsnumber.int64Value as? T
-			case is UInt64.Type: return nsnumber.uint64Value as? T
-			case is Float.Type: return nsnumber.floatValue as? T
-			case is Double.Type: return nsnumber.doubleValue as? T
-			case is Bool.Type: return nsnumber.boolValue as? T
-			case is Int.Type: return nsnumber.intValue as? T
-			case is UInt.Type: return nsnumber.uintValue as? T
-			case is Decimal.Type: return nil
-			default: break
-			}
-		}
+            if let nsnumber = object as? NSNumber {
+                switch T.self {
+                case is Int8.Type: return nsnumber.int8Value as? T
+                case is UInt8.Type: return nsnumber.uint8Value as? T
+                case is Int16.Type: return nsnumber.int16Value as? T
+                case is UInt16.Type: return nsnumber.uint16Value as? T
+                case is Int32.Type: return nsnumber.int32Value as? T
+                case is UInt32.Type: return nsnumber.uint32Value as? T
+                case is Int64.Type: return nsnumber.int64Value as? T
+                case is UInt64.Type: return nsnumber.uint64Value as? T
+                case is Float.Type: return nsnumber.floatValue as? T
+                case is Double.Type: return nsnumber.doubleValue as? T
+                case is Bool.Type: return nsnumber.boolValue as? T
+                case is Int.Type: return nsnumber.intValue as? T
+                case is UInt.Type: return nsnumber.uintValue as? T
+                case is Decimal.Type: return nil
+                default: break
+                }
+            }
 
-        if T.self is NSString.Type {
-            if let casted = object as? String { return casted._nsObject as? T }
-        }
+            if T.self is NSString.Type {
+                if let casted = object as? String { return casted._nsObject as? T }
+            }
 
-        if T.self is String.Type {
-            if let casted = object as? NSString { return casted._swiftObject as? T }
-        }
-	#endif
+            if T.self is String.Type {
+                if let casted = object as? NSString { return casted._swiftObject as? T }
+            }
+        #endif
 
-	return nil
-}
-
-private func platformConsistentCastToNSNumber(_ object: Any) -> NSNumber? {
-	if let casted = object as? NSNumber {
-		return casted
-	}
-
-	if let casted = object as? Int8 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? UInt8 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Int16 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? UInt16 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Int32 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? UInt32 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Int64 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? UInt64 {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Float {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Double {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Bool {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Int {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? UInt {
-		return NSNumber(value: casted)
-	}
-
-	if let casted = object as? Decimal {
-		return NSDecimalNumber(decimal: casted)
-	}
-	
-	return nil
-}
-
-extension CodingKey {
-    var nsstringValue: NSString {
-        return NSString(string: self.stringValue)
+        return nil
     }
-}
+
+    private func platformConsistentCastToNSNumber(_ object: Any) -> NSNumber? {
+        if let casted = object as? NSNumber {
+            return casted
+        }
+
+        if let casted = object as? Int8 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? UInt8 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Int16 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? UInt16 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Int32 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? UInt32 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Int64 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? UInt64 {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Float {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Double {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Bool {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Int {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? UInt {
+            return NSNumber(value: casted)
+        }
+
+        if let casted = object as? Decimal {
+            return NSDecimalNumber(decimal: casted)
+        }
+
+        return nil
+    }
+
+    extension CodingKey {
+        var nsstringValue: NSString {
+            return NSString(string: self.stringValue)
+        }
+    }
 
 #endif
-

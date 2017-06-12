@@ -327,7 +327,7 @@ class CastingUtilsTests: XCTestCase {
 }
 
 #if os(Linux)
-
+    
     extension CastingUtilsTests {
         static var allTests = [
             ("testCastingInt8", testCastingInt8),
