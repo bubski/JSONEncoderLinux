@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import XCTest
-@testable import ObjectMapper
+@testable import JSONEncoderLinux
 
 class CastingUtilsTests: XCTestCase {
 
