@@ -1,3 +1,7 @@
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Swift.org open source project
+//
 // Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
 // Licensed under Apache License v2.0 with Runtime Library Exception
 //
@@ -5,50 +9,15 @@
 // See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 //===----------------------------------------------------------------------===//
-//
-// RUN: %target-run-simple-swift
-// REQUIRES: executable_test
-// REQUIRES: objc_interop
 
 import Swift
 import Foundation
+import XCTest
 @testable import JSONEncoderLinux
 
 // MARK: - Test Suite
 
-fileprivate struct JSON: Equatable {
-    private var jsonObject: Any
-
-    fileprivate init(data: Data) throws {
-        self.jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-    }
-
-    static func ==(lhs: JSON, rhs: JSON) -> Bool {
-        switch (lhs.jsonObject, rhs.jsonObject) {
-        case let (lhs, rhs) as ([AnyHashable: Any], [AnyHashable: Any]):
-            return NSDictionary(dictionary: lhs) == NSDictionary(dictionary: rhs)
-        case let (lhs, rhs) as ([Any], [Any]):
-            return NSArray(array: lhs) == NSArray(array: rhs)
-        default:
-            return false
-        }
-    }
-}
-
-import XCTest
-
-func expectUnreachable(_ msg: String) -> Never {
-    preconditionFailure(msg)
-}
-
-func expectEqual<T : Equatable>(_ expected: T, _ actual: T, _ msg: String) {
-    precondition(expected == actual, msg)
-//    expectEqualTest(expected, actual, ${trace}, showFrame: false) {$0 == $1}
-}
-
-class TestJSONEncoderSuper : XCTestCase { }
-
-class TestJSONEncoder : TestJSONEncoderSuper {
+class TestJSONEncoder : XCTestCase {
     // MARK: - Encoding Top-Level Empty Types
     func testEncodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()
@@ -280,6 +249,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
             let _ = try encoder.encode(NestedContainersTestType())
         } catch let error {
             expectUnreachable("Caught error during encoding nested container types: \(error)")
+            return
         }
     }
 
@@ -289,6 +259,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
             let _ = try encoder.encode(NestedContainersTestType(testSuperEncoder: true))
         } catch let error {
             expectUnreachable("Caught error during encoding nested container types: \(error)")
+            return
         }
     }
 
@@ -301,6 +272,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
         do {
             let _ = try JSONEncoder().encode(value)
             expectUnreachable("Encode of top-level \(T.self) was expected to fail.")
+            return
         } catch {}
     }
 
@@ -312,7 +284,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
                                    dataDecodingStrategy: JSONDecoder.DataDecodingStrategy = .base64Decode,
                                    nonConformingFloatEncodingStrategy: JSONEncoder.NonConformingFloatEncodingStrategy = .throw,
                                    nonConformingFloatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw) where T : Codable, T : Equatable {
-        var payload: Data! = nil
+        let payload: Data
         do {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = dateEncodingStrategy
@@ -321,6 +293,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
             payload = try encoder.encode(value)
         } catch {
             expectUnreachable("Failed to encode \(T.self) to JSON.")
+            return
         }
 
         if let expectedJSON = json {
@@ -331,12 +304,14 @@ class TestJSONEncoder : TestJSONEncoderSuper {
                 expectedJSONObject = try JSON(data: expectedJSON)
             } catch {
                 expectUnreachable("Invalid JSON data passed as expectedJSON.")
+                return
             }
 
             do {
                 payloadJSONObject = try JSON(data: payload)
             } catch {
                 expectUnreachable("Produced data is not a valid JSON.")
+                return
             }
 
             expectEqual(expectedJSONObject, payloadJSONObject, "Produced JSON not identical to expected JSON.")
@@ -351,6 +326,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
             expectEqual(decoded, value, "\(T.self) did not round-trip to an equal value.")
         } catch {
             expectUnreachable("Failed to decode \(T.self) from JSON.")
+            return
         }
     }
 }
@@ -743,3 +719,32 @@ struct NestedContainersTestType : Encodable {
     }
 
 #endif
+
+// MARK: - Utilities
+
+fileprivate struct JSON: Equatable {
+    private var jsonObject: Any
+
+    fileprivate init(data: Data) throws {
+        self.jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+    }
+
+    static func ==(lhs: JSON, rhs: JSON) -> Bool {
+        switch (lhs.jsonObject, rhs.jsonObject) {
+        case let (lhs, rhs) as ([AnyHashable: Any], [AnyHashable: Any]):
+            return NSDictionary(dictionary: lhs) == NSDictionary(dictionary: rhs)
+        case let (lhs, rhs) as ([Any], [Any]):
+            return NSArray(array: lhs) == NSArray(array: rhs)
+        default:
+            return false
+        }
+    }
+}
+
+fileprivate func expectUnreachable(_ message: String) {
+    XCTFail(message)
+}
+
+fileprivate func expectEqual<T : Equatable>(_ expected: T, _ actual: T, _ message: String) {
+    XCTAssertEqual(expected, actual, message)
+}
