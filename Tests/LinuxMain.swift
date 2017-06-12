@@ -24,5 +24,6 @@ import XCTest
 @testable import JSONEncoderLinuxTests
 
 XCTMain([
-	testCase(CastingUtilsTests.allTests),
+        testCase(CastingUtilsTests.allTests),
+        testCase(JSONEncoderTests.allTests),
 	])
