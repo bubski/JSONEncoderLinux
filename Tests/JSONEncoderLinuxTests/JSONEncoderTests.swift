@@ -22,6 +22,11 @@ func expectUnreachable(_ msg: String) {
     preconditionFailure(msg)
 }
 
+func expectEqual<T : Equatable>(_ expected: T, _ actual: T, _ msg: String) {
+    precondition(expected == actual, msg)
+//    expectEqualTest(expected, actual, ${trace}, showFrame: false) {$0 == $1}
+}
+
 class TestJSONEncoderSuper : XCTestCase { }
 
 class TestJSONEncoder : TestJSONEncoderSuper {
