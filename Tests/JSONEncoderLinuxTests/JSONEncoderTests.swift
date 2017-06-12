@@ -16,9 +16,28 @@ import Foundation
 
 // MARK: - Test Suite
 
+fileprivate struct JSON: Equatable {
+    private var jsonObject: Any
+
+    fileprivate init(data: Data) throws {
+        self.jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+    }
+
+    static func ==(lhs: JSON, rhs: JSON) -> Bool {
+        switch (lhs.jsonObject, rhs.jsonObject) {
+        case let (lhs, rhs) as ([AnyHashable: Any], [AnyHashable: Any]):
+            return NSDictionary(dictionary: lhs) == NSDictionary(dictionary: rhs)
+        case let (lhs, rhs) as ([Any], [Any]):
+            return NSArray(array: lhs) == NSArray(array: rhs)
+        default:
+            return false
+        }
+    }
+}
+
 import XCTest
 
-func expectUnreachable(_ msg: String) {
+func expectUnreachable(_ msg: String) -> Never {
     preconditionFailure(msg)
 }
 
@@ -305,7 +324,22 @@ class TestJSONEncoder : TestJSONEncoderSuper {
         }
 
         if let expectedJSON = json {
-            expectEqual(expectedJSON, payload, "Produced JSON not identical to expected JSON.")
+            let expectedJSONObject: JSON
+            let payloadJSONObject: JSON
+
+            do {
+                expectedJSONObject = try JSON(data: expectedJSON)
+            } catch {
+                expectUnreachable("Invalid JSON data passed as expectedJSON.")
+            }
+
+            do {
+                payloadJSONObject = try JSON(data: payload)
+            } catch {
+                expectUnreachable("Produced data is not a valid JSON.")
+            }
+
+            expectEqual(expectedJSONObject, payloadJSONObject, "Produced JSON not identical to expected JSON.")
         }
 
         do {
