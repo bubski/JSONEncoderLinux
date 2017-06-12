@@ -17,6 +17,11 @@ import Foundation
 // MARK: - Test Suite
 
 import XCTest
+
+func expectUnreachable(_ msg: String) {
+    preconditionFailure(msg)
+}
+
 class TestJSONEncoderSuper : XCTestCase { }
 
 class TestJSONEncoder : TestJSONEncoderSuper {
