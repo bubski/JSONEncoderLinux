@@ -259,7 +259,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
         let encoder = JSONEncoder()
         do {
             let _ = try encoder.encode(NestedContainersTestType())
-        } catch let error as NSError {
+        } catch let error {
             expectUnreachable("Caught error during encoding nested container types: \(error)")
         }
     }
@@ -268,7 +268,7 @@ class TestJSONEncoder : TestJSONEncoderSuper {
         let encoder = JSONEncoder()
         do {
             let _ = try encoder.encode(NestedContainersTestType(testSuperEncoder: true))
-        } catch let error as NSError {
+        } catch let error {
             expectUnreachable("Caught error during encoding nested container types: \(error)")
         }
     }
