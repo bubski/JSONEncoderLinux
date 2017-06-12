@@ -25,5 +25,5 @@ import XCTest
 
 XCTMain([
         testCase(CastingUtilsTests.allTests),
-        testCase(JSONEncoderTests.allTests),
+        testCase(TestJSONEncoder.allTests),
 	])
