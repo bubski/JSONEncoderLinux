@@ -13,7 +13,10 @@
 import Swift
 import Foundation
 import XCTest
-@testable import JSONEncoderLinux
+
+#if os(Linux)
+    @testable import JSONEncoderLinux
+#endif
 
 // MARK: - Test Suite
 
